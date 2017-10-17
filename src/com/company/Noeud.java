@@ -38,25 +38,21 @@ public class Noeud {
             out.print(this.listeVoisins.get(i).getNumero()+" ");
         }
     }
-//SupprimerVoisin est utilisé dans le cas ou je supprime 1 seul voisin SupprimerVoisins 2 est utilisé pour supprimé tous les voisins
+
     public Noeud SupprimerVoisins(Noeud n){ //A.supprimervoisins(B) Supprime A de la liste desvoisins de B et inversement
         this.listeVoisins.remove(n);
         n.listeVoisins.remove(this);
         return this;
     }
-    public Noeud SupprimerVoisins2(Noeud n){ //A.Supprimervoisins2(B) Supprime A de la liste  des Voisins de B
-        n.listeVoisins.remove(this);
-        return this;
-    }
+
 
     public Noeud SupprimerTousLesVoisins(){
         for(int i=0;i<this.listeVoisins.size();i++){
-            this.SupprimerVoisins2((this.GetListeVoisins().get(i)));
+            //this.SupprimerVoisins2((this.GetListeVoisins().get(i)));
+            this.GetListeVoisins().get(i).listeVoisins.remove(this);
         }
         this.GetListeVoisins().clear();
         return this;
     }
-
-
 
 }

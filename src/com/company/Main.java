@@ -2,7 +2,7 @@ package com.company;
 import static java.lang.System.*;
 
 public class Main {
-
+//Est-ce qu'on peut avoir un noeud isolé ?
     public static void main(String[] args) {
         System.out.println("This is a test\n");
         Noeud a = new Noeud(1,0);
@@ -25,11 +25,18 @@ public class Main {
 
         out.print("J'affiche mon Graphe\n");
         g.AfficherGraphe(g);
-        //Impossible de retirer le voisin c du noeud a
+        g.NoeudDePLusGrandDegres();
+
         g.RetirerNoeud(a);
-        out.print("Je supprime l'arrêt 1\n");
+        g.RetirerNoeud(a);
+        g.RetirerNoeud(z);
+        g.RetirerNoeud(b);
+
+        out.print("Je supprime l'arrêt 1 5 et 2\n");
         out.print("J'affiche mon Graphe\n");
+
         g.AfficherGraphe(g);
+        g.NoeudDePLusGrandDegres();
         //  g.AfficheNoeudDegreInf(5);
     }
 }
