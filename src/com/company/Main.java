@@ -27,8 +27,6 @@ public class Main {
         g.AfficherGraphe(g);
         //Impossible de retirer le voisin c du noeud a
         g.RetirerNoeud(a);
-        g.RetirerNoeud(a);
-        //a.SupprimerTousLesVoisins(); // Si je le fais pas deux fois ça marche pas
         out.print("Je supprime l'arrêt 1\n");
         out.print("J'affiche mon Graphe\n");
         g.AfficherGraphe(g);

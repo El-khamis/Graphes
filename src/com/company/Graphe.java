@@ -12,17 +12,26 @@ public class Graphe {
         this.graphe = new ArrayList<Noeud>();
     }
 
-    public Graphe AjouterNoeudDansUnGraphe(Noeud n) {
+    public void AjouterNoeudDansUnGraphe(Noeud n) {
         this.graphe.add(n);
-        return this;
+        this.graphe.addAll(n.GetListeVoisins());
     }
 
     public void AfficherGraphe(Graphe g) {
-        for (int i = 0; i < g.graphe.size(); i++) {
-            out.printf("Le Noeud numero " + g.graphe.get(i).getNumero() + " a pour voisins : ");
-            g.graphe.get(i).AfficherMesVoisins();
-            out.printf("\n");
+        int size = g.graphe.size();
+        boolean[] Vu = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
+            Vu[i] = false;
         }
+
+        for (int i = 0; i < size; i++)
+            if (!Vu[g.graphe.get(i).getNumero()]) {
+                out.printf("Le Noeud numero " + g.graphe.get(i).getNumero() + " a pour voisins : ");
+                g.graphe.get(i).AfficherMesVoisins();
+                out.printf("\n");
+                Vu[g.graphe.get(i).getNumero()] = true;
+            }
     }
 
 
@@ -44,20 +53,21 @@ public class Graphe {
 
     //public Noeud NoeudPlusHautDegres(){};
 
-    public Graphe RetirerNoeud(Noeud n) {
+    public void RetirerNoeud(Noeud n) {
+        int o=0;
         boolean present=false;
-        for(int i=0;i<this.graphe.size();i++){
-            if(n.getNumero()==this.graphe.get(i).getNumero()){
-                present =true;
-            }
+        int size=this.graphe.size();
+        for(int i=0;i<size;i++){
+            if(n.getNumero()==this.graphe.get(i).getNumero()) present = true;
         }
-        if(present) {
-            n.SupprimerTousLesVoisins();
-            this.graphe.remove(n);
+        if(present) n.SupprimerTousLesVoisins();
+        else out.print("Le noeud n'est pas présent\n");
+        n.GetListeVoisins().clear();
+        while(this.graphe.indexOf(n)!=-1){
+            this.graphe.remove(this.graphe.indexOf(n)); //Pourquoi le remove ne fonctionne pas du premier coup 
+            o++;
         }
-        else {
-            out.print("Le noeud n'est pas présent\n");
-        }
-        return this;
+        out.print("J'ai du le faire "+o+" fois\n");
+        //this.graphe.remove(n);
     }
 }

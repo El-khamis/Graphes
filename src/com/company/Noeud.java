@@ -38,7 +38,7 @@ public class Noeud {
             out.print(this.listeVoisins.get(i).getNumero()+" ");
         }
     }
-
+//SupprimerVoisin est utilisé dans le cas ou je supprime 1 seul voisin SupprimerVoisins 2 est utilisé pour supprimé tous les voisins
     public Noeud SupprimerVoisins(Noeud n){ //A.supprimervoisins(B) Supprime A de la liste desvoisins de B et inversement
         this.listeVoisins.remove(n);
         n.listeVoisins.remove(this);
@@ -50,15 +50,7 @@ public class Noeud {
     }
 
     public Noeud SupprimerTousLesVoisins(){
-        out.print("J'affiche la liste des voisins du sommet que je vais suppr :\n");
-        out.print("\n\n"+this.listeVoisins.size()+"\n\n");
-        this.AfficherMesVoisins();
-        out.print("\n\n"+this.listeVoisins.size()+"\n\n");
-        out.print("J'affiches tous ceux que je vais suppr : \n");
-        int size=this.listeVoisins.size();
-
-        for(int i=0;i<this.listeVoisins.size();i++){ //La taille change à chaque itération donc je la stock avant
-            out.print("à lindice  " + i + " Il y a le voisin " + this.listeVoisins.get(i).getNumero() + "\n");
+        for(int i=0;i<this.listeVoisins.size();i++){
             this.SupprimerVoisins2((this.GetListeVoisins().get(i)));
         }
         this.GetListeVoisins().clear();
