@@ -6,19 +6,30 @@ import static java.lang.System.*;
 
 public class Noeud {
     private int couleur=0;
-    private int numero=0;
+    private int identifiant=0;
+    private String nom;
     private ArrayList<Noeud> listeVoisins = new ArrayList<Noeud>();
+
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     public ArrayList<Noeud> GetListeVoisins() {
         return this.listeVoisins;
     }
-    public int getNumero() {
-        return numero;
+    public int getIdentifiant() {
+        return identifiant;
     }
 
-    public Noeud(int num, int coul){
-       numero=num;
+    public Noeud(int id, int coul, String nom){
+       identifiant=id;
        couleur=coul;
+       this.nom=nom;
         }
 
 
@@ -35,7 +46,7 @@ public class Noeud {
 
     public void AfficherMesVoisins(){
         for(int i=0;i<this.listeVoisins.size();i++){
-            out.print(this.listeVoisins.get(i).getNumero()+" ");
+            out.print(this.listeVoisins.get(i).getNom()+" ");
         }
     }
 
@@ -54,5 +65,6 @@ public class Noeud {
         this.GetListeVoisins().clear();
         return this;
     }
+
 
 }

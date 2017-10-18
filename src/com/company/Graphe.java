@@ -1,5 +1,6 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -12,28 +13,27 @@ public class Graphe {
         this.graphe = new ArrayList<Noeud>();
     }
 
-    public void AjouterNoeudDansUnGraphe(Noeud n) {
-        this.graphe.add(n);
-        this.graphe.addAll(n.GetListeVoisins());
-        out.print("Le graphe est maintenant de taille "+this.graphe.size()+" \n");
-
+    public void AjouterNoeudDansUnGraphe(Noeud n) { //Verifier que le noeud n'est pas dans le graphe avant de l'ajouter
+        if(!this.graphe.contains(n)) {
+            this.graphe.add(n);
+            for (Noeud a:n.GetListeVoisins()) {
+               this. AjouterNoeudDansUnGraphe(a);
+            }
+        }
     }
 
-    public void AfficherGraphe(Graphe g) {
-        int size = g.graphe.size();
-        boolean[] Vu = new boolean[size];
+    public void AfficherGraphe() {
 
-        for (int i = 0; i < size; i++) {
-            Vu[i] = false;
-        }
-
-        for (int i = 0; i < size; i++)
-            if (!Vu[g.graphe.get(i).getNumero()]) {
-                out.printf("Le Noeud numero " + g.graphe.get(i).getNumero() + " a pour voisins : ");
-                g.graphe.get(i).AfficherMesVoisins();
-                out.printf("\n");
-                Vu[g.graphe.get(i).getNumero()] = true;
+        int size= this.graphe.size();
+        ArrayList<Noeud> Vu = new ArrayList<Noeud>();
+        for(int i=0;i<size;i++){
+            if(!Vu.contains(this.graphe.get(i))){
+                out.printf("Le Noeud " + this.graphe.get(i).getNom() + " a pour voisins : ");
+                this.graphe.get(i).AfficherMesVoisins();
+                out.print("\n");
+                Vu.add(this.graphe.get(i));
             }
+        }
     }
 
     public Noeud NoeudDePLusGrandDegres(){
@@ -45,7 +45,7 @@ public class Graphe {
                 indice=i;
             }
         }
-        out.print("Le sommet ayant le plus grand degres est le sommet "+ this.graphe.get(indice).getNumero()+" Il est de degres "+max+"\n");
+        out.print("Le sommet ayant le plus grand degres est le sommet "+ this.graphe.get(indice).getNom()+" Il est de degres "+max+"\n");
         return this.graphe.get(indice);
     }
 
@@ -54,7 +54,7 @@ public class Graphe {
         int cpt = 0;
         for (int i = 0; i < this.graphe.size(); i++) {
             if (k > this.graphe.get(i).NombreDeVoisins()) {
-                out.printf("Le Noeud numero " + this.graphe.get(i).getNumero() + " qui a pour degres : " + this.graphe.get(i).NombreDeVoisins() + " \n");
+                out.printf("Le Noeud " + this.graphe.get(i).getNom() + " est de degres : " + this.graphe.get(i).NombreDeVoisins() + " \n");
                 cpt++;
             }
         }
@@ -65,21 +65,56 @@ public class Graphe {
 
     }
 
+    public Noeud PlusGrandNoeudDeDegreInf(int k){
+        int cpt = 0;
+        int indice=-1;
+        int max=0;
+        for (int i = 0; i < this.graphe.size(); i++) {
+            if (this.graphe.get(i).NombreDeVoisins()< k && this.graphe.get(i).NombreDeVoisins()>=max) {
+                max=this.graphe.get(i).GetListeVoisins().size();
+                indice=i;
+            }
+        }
+        if (indice == -1) {
+            out.print("Aucun Noeud disponible \n");
+            return null;
+        }
+        return this.graphe.get(indice);
+    }
+
     public void RetirerNoeud(Noeud n) {
-        int o=0;
-        boolean present=false;
         if(this.graphe.indexOf(n)!=-1){
+            out.print("Je supprime le noeud "+n.getNom()+" du graphe\n");
             n.SupprimerTousLesVoisins();//Si mon sommet est bien présent dans mon graphe alors je supprime
             n.GetListeVoisins().clear();
+            this.graphe.remove(this.graphe.indexOf(n));
         }
-        else out.print("Le noeud n'est pas présent\n");
+        else out.print("Le "+n.getNom()+"noeud n'est pas présent\n");
 
-        while(this.graphe.indexOf(n)!=-1){
-            out.print("hehehe je suis a l'indice "+this.graphe.indexOf(n)+"\n");
-            this.graphe.remove(this.graphe.indexOf(n)); //Pourquoi le remove ne fonctionne pas du premier coup
-            o++;
-        }
-        out.print("J'ai du le faire "+o+" fois\n\n");
-        out.print("Le graphe est maintenant de taille "+this.graphe.size()+" \n");
+        this.graphe.remove(n);
+    }
+
+    public void ColoriageDeGraphe(int couleur){
+         ArrayList<Noeud> copyOfGraphe= new ArrayList<Noeud>();
+        ArrayList<Noeud> OrdreDenlevement = new ArrayList<Noeud>();
+        Noeud temp= new Noeud(0,0,"osef");
+         arraycopy(this.graphe,0,copyOfGraphe,0,this.graphe.size());
+
+         while(copyOfGraphe.size()!=1){
+
+             temp=PlusGrandNoeudDeDegreInf(couleur);
+             if(temp==null){
+                 out.print("Il faut spill je ne l'ai pas implémenter encore \n");
+                 return ;
+             }
+             else{
+                 //Retirer le noeud de mon vrai graphe
+             }
+
+
+
+
+         }
+
     }
 }

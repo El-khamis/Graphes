@@ -5,11 +5,14 @@ public class Main {
 //Est-ce qu'on peut avoir un noeud isolé ?
     public static void main(String[] args) {
         System.out.println("This is a test\n");
-        Noeud a = new Noeud(1,0);
-        Noeud b = new Noeud(2,1);
-        Noeud c = new Noeud( 3, 2);
-        Noeud d= new Noeud(4,3);
-        Noeud z= new Noeud(5,4);
+        Noeud a = new Noeud(1,-1,"a");
+        Noeud b = new Noeud(2,-1,"b");
+        Noeud c = new Noeud( 3, -1,"c");
+        Noeud d= new Noeud(4,-1,"d");
+        Noeud z= new Noeud(5,-1,"z");
+
+
+
         Graphe g= new Graphe();
         a.AjouterVoisins(b);
         a.AjouterVoisins(c);
@@ -24,19 +27,25 @@ public class Main {
         g.AjouterNoeudDansUnGraphe(z);
 
         out.print("J'affiche mon Graphe\n");
-        g.AfficherGraphe(g);
+        g.AfficherGraphe();
+        out.print("\n\n");
         g.NoeudDePLusGrandDegres();
-
+        out.print("\n\n");
+        g.AfficheNoeudDegreInf(3);
+        out.print("\n\n");
         g.RetirerNoeud(a);
         g.RetirerNoeud(a);
         g.RetirerNoeud(z);
         g.RetirerNoeud(b);
 
-        out.print("Je supprime l'arrêt 1 5 et 2\n");
         out.print("J'affiche mon Graphe\n");
 
-        g.AfficherGraphe(g);
+        g.AfficherGraphe();
+
+        out.print("\n\n");
         g.NoeudDePLusGrandDegres();
+        out.print("\n\n");
+        g.AfficheNoeudDegreInf(3);
         //  g.AfficheNoeudDegreInf(5);
     }
 }
