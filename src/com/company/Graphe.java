@@ -108,7 +108,7 @@ public class Graphe {
                  return ;
              }
              else{
-                 //Retirer le noeud de mon vrai graphe
+                 //Retirer le noeud de mon vrai graphe3
              }
 
 
