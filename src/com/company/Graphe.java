@@ -1,10 +1,6 @@
 package com.company;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
-import com.company.Noeud;
-
 import static java.lang.System.*;
 
 
@@ -64,8 +60,8 @@ public class Graphe {
     }
 
     /**
-     * Retourne le noeud de plus grand degrès de notre Graphe
-     * @return
+     *
+     * @return Retourne le noeud de plus grand degrès de notre Graphe
      */
     public Noeud NoeudDePLusGrandDegres(){
         int max=0;
@@ -102,10 +98,10 @@ public class Graphe {
     }
 
     /**
-     * Renvoie le plus grand noeud ayant un degrès inférieur à k
-     * Si y'en a plusieurs de disponible il prend le dernier
-     * @param k
-     * @return
+     * R
+     * @param k le degrés
+     * @return envoie le plus grand noeud ayant un degrès inférieur à k
+     *         Si y'en a plusieurs de disponible il prend le dernier
      */
     public Noeud PlusGrandNoeudDeDegreInf(int k){
         int cpt = 0;
@@ -154,20 +150,14 @@ public class Graphe {
         Noeud temp;
         Graphe OrdreDenlevement = new Graphe();
         Graphe CopyOfMyGraphe = new Graphe(this);
-        //Je cherche a copier mon graphe this
 
         for(int i=0;i<this.graphe.size();i++) {
             CopyOfMyGraphe.AjouterNoeudDansUnGraphe(this.graphe.get(i));
+            CopyOfMyGraphe.graphe.get(i).SetListeVoisin(this.graphe.get(i).GetListeVoisins());
         }
-        if(CopyOfMyGraphe.graphe==this.graphe) { //Pour être sur que j'ai bien copier mon graphe et que je n'ai pas juste copier l'adresse
-            out.print("Il s'agit du même objet\n");
-            return;
-        }
-        else{
-            out.print("Les deux objets sont différents \n\n\n");
-        }
+        CopyOfMyGraphe.AfficherGraphe();
 
-        //Pourquoi quand je supprime v du graphe "this" le graphe "CopyOfGraphe" perd aussi v
+
         out.print("\n\n\nJe fais des test \n\n\n");
         this.RetirerNoeud(this.graphe.get(2));//Affecte les deux graphes mais ne devrait pas
         this.AfficherGraphe();
@@ -200,6 +190,8 @@ public class Graphe {
         this.AfficherGraphe();
         CopyOfMyGraphe.AfficherGraphe();
         OrdreDenlevement.AfficherGraphe();
+        out.print("Print du array temporaire\n\n\n");
+
     }
 
 }

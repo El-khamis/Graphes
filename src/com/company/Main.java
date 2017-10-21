@@ -51,20 +51,5 @@ public class Main {
         g.AfficheNoeudDegreInf(3);
         out.print("\n\n");
         g.ColoriageDeGraphe(3);
-
-
-        g.RetirerNoeud(z);
-        /*g.RetirerNoeud(z);
-        g.RetirerNoeud(b); */
-
-        //out.print("J'affiche mon Graphe\n");
-
-       /* g.AfficherGraphe();
-
-        out.print("\n\n");
-        g.NoeudDePLusGrandDegres();
-        out.print("\n\n");
-        g.AfficheNoeudDegreInf(3);
-        //  g.AfficheNoeudDegreInf(5); */
     }
 }

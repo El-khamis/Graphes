@@ -36,8 +36,8 @@ public class Noeud {
 
 
     /**
-     * Renvoie le degrès du noeud
-     * @return
+     *
+     * @return Renvoie le degrés du noeud
      */
     public int NombreDeVoisins(Noeud n){
         return n.listeVoisins.size();
@@ -45,7 +45,7 @@ public class Noeud {
 
     /**
      * Rajoute un voisin dans le noeud this et inversement
-     * @param n
+     * @param n Le noeud a ajouter
      */
     public void AjouterVoisins(Noeud n){
         if(!this.listeVoisins.contains(n)) {
@@ -70,7 +70,7 @@ public class Noeud {
     /**
      * A.supprimervoisins(B) Supprime A de la liste desvoisins de B et inversement
      * @param n
-     * @return
+     * @return Le noeud privé de son voisins
      */
     public Noeud SupprimerVoisins(Noeud n){
         this.listeVoisins.remove(n);
@@ -82,7 +82,7 @@ public class Noeud {
      * Pareil que SupprimerViosins mais je le fais sur toute la liste de voisins
      * la boucle for visite tous mes voisins et me supprime chez eux
      * ensuite je supprime ma liste de voisins
-     * @return
+     * @return Le noeud privé de ses voisins
      */
 
     public Noeud SupprimerTousLesVoisins(){
