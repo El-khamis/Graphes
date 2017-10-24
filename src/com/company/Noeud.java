@@ -1,13 +1,27 @@
 package com.company;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import static java.lang.System.*;
 
 
 public class Noeud {
+    public int getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(int couleur) {
+        this.couleur = couleur;
+    }
+
     private int couleur=0;
     private int identifiant=0;
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     private String nom;
     private ArrayList<Noeud> listeVoisins = new ArrayList<Noeud>();
 
@@ -32,6 +46,7 @@ public class Noeud {
         identifiant=n.identifiant;
         couleur=n.couleur;
         nom=n.nom;
+        listeVoisins=n.GetListeVoisins();
     }
 
 
@@ -79,6 +94,23 @@ public class Noeud {
     }
 
     /**
+     * Il s'agit la d'une fonction intermediaire qui nous renvoie l'indice de l'element que l'on souhaite supprimer
+     * @param nom Nom du noeud que l'on souhaite supprimer
+     * @param Tab Liste de voisin ou ce trouve le noeud
+     * @return Index où ce trouve ce noeud
+     */
+    public int IndexDuNoeudDeNom(String nom, ArrayList<Noeud> Tab){
+        for(int i=0;i<Tab.size();i++){
+            if(Tab.get(i).getNom().equals(nom) ){
+                return i;
+            }
+        }
+        return -1;
+
+    }
+
+
+    /**
      * Pareil que SupprimerViosins mais je le fais sur toute la liste de voisins
      * la boucle for visite tous mes voisins et me supprime chez eux
      * ensuite je supprime ma liste de voisins
@@ -86,8 +118,11 @@ public class Noeud {
      */
 
     public Noeud SupprimerTousLesVoisins(){
+        int index;
         for(int i=0;i<this.listeVoisins.size();i++){
-            this.GetListeVoisins().get(i).listeVoisins.remove(this);
+            index=IndexDuNoeudDeNom(this.getNom(),this.listeVoisins.get(i).listeVoisins);
+            this.listeVoisins.get(i).GetListeVoisins().remove(index);
+            out.print("\n");
         }
         this.GetListeVoisins().clear();
         return this;

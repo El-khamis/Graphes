@@ -1,5 +1,6 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import static java.lang.System.*;
 
@@ -14,14 +15,35 @@ public class Graphe {
         this.graphe = new ArrayList<Noeud>();
     }
 
+    public ArrayList<Noeud> getGraphe() {
+        return graphe;
+    }
+
+    public void setGraphe(ArrayList<Noeud> graphe) {
+        this.graphe = graphe;
+    }
+
     /**
      * Constructeur paramétrer
      * @param g
      */
     public Graphe(Graphe g) {
-        this.graphe= new ArrayList<Noeud>();
-        for(int i=0;i<g.graphe.size();i++) {
-            this.graphe.add(g.graphe.get(i));
+
+
+        this.graphe = new ArrayList<Noeud>(g.graphe.size());
+        int index;
+        for (int i = 0; i < g.graphe.size(); i++) {
+            this.graphe.add(new Noeud(g.graphe.get(i)));
+            this.graphe.get(i).SetListeVoisin(new ArrayList<Noeud>());
+        }
+        for (int i = 0; i < g.graphe.size(); i++) {
+            for (int j = 0; j < g.graphe.get(i).GetListeVoisins().size(); j++) {
+                index = g.graphe.indexOf(g.graphe.get(i).GetListeVoisins().get(j));
+                if(!this.graphe.get(i).GetListeVoisins().contains(this.graphe.get(index))) {
+                    this.graphe.get(i).GetListeVoisins().add(new Noeud(this.graphe.get(index)));
+                }
+
+            }
         }
     }
 
@@ -33,9 +55,6 @@ public class Graphe {
     public void AjouterNoeudDansUnGraphe(Noeud n) { //Verifier que le noeud n'est pas dans le graphe avant de l'ajouter
         if(!this.graphe.contains(n)) {
             this.graphe.add(n);
-            for (Noeud a:n.GetListeVoisins()) {
-               this.AjouterNoeudDansUnGraphe(a);
-            }
         }
     }
 
@@ -51,7 +70,7 @@ public class Graphe {
         ArrayList<Noeud> Vu = new ArrayList<Noeud>();
         for(int i=0;i<size;i++){
             if(!Vu.contains(this.graphe.get(i))){
-                out.printf("Le Noeud " + this.graphe.get(i).getNom() + " a pour voisins : ");
+                out.printf("Le Noeud " + this.graphe.get(i).getNom() + " de couleur "+this.graphe.get(i).getCouleur()+" a pour voisins : ");
                 this.graphe.get(i).AfficherMesVoisins();
                 out.print("\n");
                 Vu.add(this.graphe.get(i));
@@ -82,7 +101,7 @@ public class Graphe {
      */
     public void AfficheNoeudDegreInf(int k) {
         Noeud n;
-        out.print("Les Noeud ayant un degres inferieur strictement a " + k + " sont : \n");
+        out.print("Les Noeuds ayant un degrès inferieur strictement à " + k + " sont : \n");
         int cpt = 0;
         for (int i = 0; i < this.graphe.size(); i++) {
             if (k > this.graphe.get(i).NombreDeVoisins(this.graphe.get(i))) { //Je suis obligé de lui dire que c un noeud sinon ça marche pas pk ?
@@ -127,14 +146,25 @@ public class Graphe {
      * @param n
      */
     public void RetirerNoeud(Noeud n) {
-        if(this.graphe.indexOf(n)!=-1){
-            out.print("Je supprime le noeud "+n.getNom()+" du graphe\n");
+        if (this.graphe.indexOf(n) != -1) {
+            out.print("Je supprime le noeud " + n.getNom() + " du graphe\n");
             n.SupprimerTousLesVoisins();//Si mon sommet est bien présent dans mon graphe alors je supprime
             n.GetListeVoisins().clear();
             this.graphe.remove(this.graphe.indexOf(n));
+        } else {
+            out.print("Le noeud n'est pas présent\n");
         }
-        else out.print("Le "+n.getNom()+"noeud n'est pas présent\n");
-        this.graphe.remove(n);
+    }
+
+
+    public int ApparaitDansUnVoisin(Noeud n){
+       // Noeud l= new Noeud(5,5,"osef");
+        for(int i=0;i<this.graphe.size();i++){
+            if(n.IndexDuNoeudDeNom(n.getNom(),this.graphe.get(i).GetListeVoisins())!=-1){
+                return n.IndexDuNoeudDeNom(n.getNom(),this.graphe.get(i).GetListeVoisins());
+            }
+        }
+        return -1;
     }
 
     /**
@@ -145,53 +175,104 @@ public class Graphe {
      * @param couleur
      */
     public void ColoriageDeGraphe(int couleur) {
-        int ActionEffectuee=0;
-        int nmbrDeNoeudEnlever=0;
+        int ActionEffectuee = 0;
+        int nmbrDeNoeudEnlever = 0;
         Noeud temp;
+        ArrayList<Noeud> TabDeSpill = new ArrayList<Noeud>();
         Graphe OrdreDenlevement = new Graphe();
         Graphe CopyOfMyGraphe = new Graphe(this);
-
-        for(int i=0;i<this.graphe.size();i++) {
-            CopyOfMyGraphe.AjouterNoeudDansUnGraphe(this.graphe.get(i));
-            CopyOfMyGraphe.graphe.get(i).SetListeVoisin(this.graphe.get(i).GetListeVoisins());
-        }
         CopyOfMyGraphe.AfficherGraphe();
-
-
-        out.print("\n\n\nJe fais des test \n\n\n");
-        this.RetirerNoeud(this.graphe.get(2));//Affecte les deux graphes mais ne devrait pas
-        this.AfficherGraphe();
-
-        out.print("\nAffichage de mon second graphe\n");
-        CopyOfMyGraphe.AfficherGraphe();
-        out.print("\n\n\nFin des test \n\n\n");
-
-
-        int size =CopyOfMyGraphe.graphe.size();
-        while(size!=ActionEffectuee) {
+        int size = CopyOfMyGraphe.graphe.size();
+        while (size != ActionEffectuee) {
+            int cpt=0;
             temp = CopyOfMyGraphe.PlusGrandNoeudDeDegreInf(couleur);
             if (temp == null) {
+                while(temp==null){
+                    temp=CopyOfMyGraphe.PlusGrandNoeudDeDegreInf(couleur+cpt);
+                    cpt++;
+                }
                 out.print("Il faut spill je ne l'ai pas implémenter encore \n");
                 ActionEffectuee++;
-            } else {
                 nmbrDeNoeudEnlever++;
-                ActionEffectuee++;
                 OrdreDenlevement.AjouterNoeudDansUnGraphe(temp);
                 CopyOfMyGraphe.RetirerNoeud(temp);
-                out.print("J'ai choisi le noeud " + temp.getNom() + " \n");
+                TabDeSpill.add(temp);
+            }
+
+            else {
+                ActionEffectuee++;
+                nmbrDeNoeudEnlever++;
+                OrdreDenlevement.AjouterNoeudDansUnGraphe(temp);
+                CopyOfMyGraphe.RetirerNoeud(temp);
             }
         }
-        //je n'arrive pas à copier mon graphe this
-        //A partir d'ici j'ai un l'ordre d'enlevement de mes noeud je dois maintenant remettre mes noeuds dans le graphe et leur attribué une couleur a chacun
-        /*for(int i=OrdreDenlevement.graphe.size()-1;i>-1;i--){
-            this.AjouterNoeudDansUnGraphe(OrdreDenlevement.graphe.get(i));
-        }*/
-        out.print("J'ai enlever "+nmbrDeNoeudEnlever+ " noeuds\n");
-        this.AfficherGraphe();
-        CopyOfMyGraphe.AfficherGraphe();
-        OrdreDenlevement.AfficherGraphe();
-        out.print("Print du array temporaire\n\n\n");
+        int index;
+        Noeud k = new Noeud(6, 5, "osef");
 
+        for (int i = 0; i < OrdreDenlevement.graphe.size(); i++) {
+            for (int j = OrdreDenlevement.graphe.size() - 1; j > -1; j--) {
+                CopyOfMyGraphe.graphe.add(OrdreDenlevement.graphe.get(j));
+                index = k.IndexDuNoeudDeNom(CopyOfMyGraphe.graphe.get(i).getNom(), this.graphe);
+                CopyOfMyGraphe.graphe.get(i).SetListeVoisin(this.graphe.get(index).GetListeVoisins());
+
+                for (int l = 0; l < CopyOfMyGraphe.graphe.get(i).GetListeVoisins().size(); l++) {
+                    if (k.IndexDuNoeudDeNom(CopyOfMyGraphe.graphe.get(i).GetListeVoisins().get(l).getNom(), TabDeSpill) != -1) {
+                        CopyOfMyGraphe.graphe.get(i).setCouleur(-1);
+
+                    }
+                    else {
+                        if (-1 != k.IndexDuNoeudDeNom(CopyOfMyGraphe.graphe.get(i).GetListeVoisins().get(l).getNom(), CopyOfMyGraphe.graphe)) {//Si mon voisin se trouve dans mon graphe
+                            index = k.IndexDuNoeudDeNom(CopyOfMyGraphe.graphe.get(i).GetListeVoisins().get(l).getNom(), CopyOfMyGraphe.graphe);
+                            if (CopyOfMyGraphe.graphe.get(index).getCouleur() == CopyOfMyGraphe.graphe.get(i).getCouleur()) {//Ils ont pas la meme couleur
+                                CopyOfMyGraphe.graphe.get(index).setCouleur(CopyOfMyGraphe.graphe.get(i).getCouleur() + 1);
+                            }
+                        } else {
+                            CopyOfMyGraphe.graphe.get(i).setCouleur(1);
+                        }
+                    }
+                }
+            }
+        }
+//J'arrive pas a mettre une nouvelle couleur à spill si possible
+        ArrayList<Integer> Couleur= new ArrayList<>();
+
+      /*  for(int i=0;i<CopyOfMyGraphe.graphe.size();i++){
+            if(CopyOfMyGraphe.graphe.get(i).getCouleur()==-1){//si je suis un spill
+                for(int n=0;n<couleur;n++){
+                    Couleur.add(n);
+                }
+                for(int j=0;j<CopyOfMyGraphe.graphe.get(i).GetListeVoisins().size();j++){
+                    if(CopyOfMyGraphe.graphe.get(i).GetListeVoisins().get(j).getCouleur()!=-1) {//Si mon voisin n'est pas un spill
+                        int eee = Couleur.indexOf(CopyOfMyGraphe.graphe.get(i).GetListeVoisins().get(j).getCouleur());
+                        if(eee!=-1) {// Et que sa couleur n'a pas déjà été supprimer alors je supprime sa couleur de mon tableau de couleur
+                            Couleur.remove(eee);
+                        }
+                    }
+                    if(Couleur.size()!=0) {
+                        out.println(CopyOfMyGraphe.graphe.get(i).getNom());
+                        System.out.println(Couleur);
+                        CopyOfMyGraphe.graphe.get(i).setCouleur(Couleur.get(0));
+                        Couleur.clear();
+                    }
+                    else{
+                        CopyOfMyGraphe.graphe.get(i).setCouleur(-1);
+                        Couleur.clear();
+                    }
+
+                }
+            }
+        }*/
+
+
+        out.print("J'ai enlever "+nmbrDeNoeudEnlever+ " noeuds\n");
+        out.print("Le graphe this\n");
+        this.AfficherGraphe();
+        out.print("\n");
+        out.print("Le graphe CopyOfMyGraphe\n");
+        CopyOfMyGraphe.AfficherGraphe();
+        out.print("\n");
+        out.print("Le graphe OrdreDenlevement\n");
+        OrdreDenlevement.AfficherGraphe();
     }
 
 }
